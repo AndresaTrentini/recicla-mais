@@ -10,8 +10,6 @@ const DeleteUserService = {
         if(userIndice === -1){
             return { erro: "Usuário não encontrado"
         
-                //    sucess: false,
-                //    message: "Usuário não encontrado" 
         }
 
         }
