@@ -21,5 +21,3 @@ const DeleteUserService = {
 }
 
 module.exports = DeleteUserService
-
-// routes.delete('/users/:id', controller.delete);
