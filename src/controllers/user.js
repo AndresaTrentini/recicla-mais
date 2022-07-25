@@ -12,7 +12,7 @@ const controller = {
           return response.status(400).json({ "erro": "Você não informou um nome" })
         }
     
-        const legendary = ListUserService.listUserData(name);
+        const user = ListUserService.listUserData(name);
     
         return response.json(user)
       }
