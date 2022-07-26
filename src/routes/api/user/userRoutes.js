@@ -7,7 +7,7 @@ const app = express()
 app.route('/users')
     .post(validationUser, userController.create)
     .put(validationUser, userController.update)
-    .get(userController.index)
+    .get(userController.list)
     .delete(userController.delete)
 
 app.route("/users/:id")
