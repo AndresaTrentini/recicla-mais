@@ -5,9 +5,12 @@ const UpdateUserService = require('../services/user/UpdateUserService')
 
 const userController = {
   create: (request, response) => {
-    const { name, password, confirmPassword, birthData, cpf, telephone, address, email, adm
+    const { name, password, birthData, cpf, telephone, address, email, adm
 
     } = request.body
+
+    if (!req.originalUrl.startsWith('/users')) adm = false
+    if (!req.user || !req.user.adm) adm = false
 
     const user = CreateUserService(name, birthData, cpf, telephone, email, address, password, adm)
 
