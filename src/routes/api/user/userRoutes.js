@@ -19,7 +19,7 @@ app.route("/users/:id")
     .delete(admin, userController.delete)
     .put(admin, validationUser, userController.update)
 
-app.post('/signup', userController.create)
+app.post('/signup', validationUser, userController.create)
 app.post('/signin', signin)
 app.post('/validate-token', validateToken)
 
