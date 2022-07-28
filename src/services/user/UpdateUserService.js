@@ -1,9 +1,7 @@
 const fs = require('fs')
-const path = 'src/app/Database/User.json'
+const path = 'src/services/user/dbUser.json'
 const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
 
-
-//const ListUserService = require("../../services/user/ListUserService") //verificar o uso do list
 
 const UpdateUserService = {
     update: (
@@ -17,11 +15,10 @@ const UpdateUserService = {
         email,
         adm
     ) => {
-        const users = ListUserService.listUserService()
-        const userIndice = user.findIndex(item => item.id === Number(id))
+        const UserIndex = users.findIndex(item => item.id === Number(id))
 
         if (UserIndex === -1) {
-            return { erro: "Usuario não encontrado" }
+            return { status: 400, mensagem: "Usuario não encontrado" }
         }
 
         users[userIndex] = {
@@ -36,7 +33,7 @@ const UpdateUserService = {
             adm
         }
 
-        fs.writeFileSync(path, JSON.stringify(userIndex))
+        fs.writeFileSync(path, JSON.stringify(users))
         return { status: 200, mensagem: userIndex[index] }
     }
 }
