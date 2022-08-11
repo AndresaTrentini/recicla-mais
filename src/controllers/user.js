@@ -41,7 +41,7 @@ const userController = {
 
     const { name, password, birthData, cpf, telephone, address, email, adm } = request.body
 
-    const user = UpdateUserService(id, name, password, birthData, cpf, telephone, address, email, adm)
+    const user = UpdateUserService.update(id, name, password, birthData, cpf, telephone, address, email, adm)
 
     response.status(user.status).json(user.mensagem)
   }

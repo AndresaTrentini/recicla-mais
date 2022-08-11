@@ -5,7 +5,7 @@ const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
 const DeleteUserService = {
     delete: (id) => {
         
-        const userIndice = users.findIndex(item => item.id === Number(id))
+        const userIndice = users.findIndex(item => item.id === id)
 
         if(userIndice === -1){
             return { erro: "Usuário não encontrado"        
