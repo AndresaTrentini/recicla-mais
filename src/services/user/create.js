@@ -1,10 +1,10 @@
-const { v4 } = require("uuid")
-const userModel = require("../../models/user")
-const bcrypt = require("bcrypt-nodejs")
-const fs = require('fs')
+import { v4 } from "uuid"
+import userModel from "../../models/user"
+import { genSaltSync, hashSync } from "bcrypt-nodejs"
+import { readFileSync, writeFileSync } from 'fs'
 
 const path =  'src/services/user/dbUser.json'
-const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
+const users = JSON.parse(readFileSync(path, 'utf-8'))
 
 const create = (name,
   birthData,
@@ -16,7 +16,7 @@ const create = (name,
   const newUser = new userModel(v4(), name, password, birthData, cpf, telephone, address, email, adm)
   
   users.push(newUser)
-  fs.writeFileSync(path, JSON.stringify(users))
+  writeFileSync(path, JSON.stringify(users))
   return {
     status: 200,
     message: "Usuário criado",
@@ -24,9 +24,9 @@ const create = (name,
   }
 }
 const encryptPassword = password => {
-  const salt = bcrypt.genSaltSync(10)
-  return bcrypt.hashSync(password, salt)
+  const salt = genSaltSync(10)
+  return hashSync(password, salt)
 
 }
 
-module.exports = create
+export default create

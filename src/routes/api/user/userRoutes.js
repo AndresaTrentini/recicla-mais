@@ -1,26 +1,26 @@
-const express = require("express")
-const userController = require("../../../controllers/user")
-const validationUser = require("./validation")
-const { signin, validateToken } = require('../../../controllers/auth')
-const passport = require('../../../config/passport')
-const admin = require('../../../middlewares/admin')
+import express from "express"
+import { create, list, ListById, destroy, update } from "../../../controllers/user"
+import validationUser from "./validation"
+import { signin, validateToken } from '../../../controllers/auth'
+import passport from '../../../config/passport'
+import admin from '../../../middlewares/admin'
 
-const app = express()
+const app = new express()
 
-app.route('/users')
-    .all(passport())
-    .post(admin, validationUser, userController.create)    
-    .get(admin, userController.list)
-    
+    app.route('/users')
+        .all(passport())
+        .post(admin, validationUser, (req, res) => create(req, res))
+        .get(admin, (req, res) => list(req, res))
 
-app.route("/users/:id")
-    .all(passport())
-    .get(admin, userController.ListById)
-    .delete(admin, userController.delete)
-    .put(admin, validationUser, userController.update)
 
-app.post('/signup', validationUser, userController.create)
-app.post('/signin', signin)
-app.post('/validate-token', validateToken)
+    app.route("/users/:id")
+        .all(passport())
+        .get(admin, (req, res) => ListById(req, res))
+        .delete(admin, (req, res) => destroy(req, res))
+        .put(admin, validationUser, (req, res) => update(req, res))
 
-module.exports = app
+    app.post('/signup', validationUser, (req, res) => create(req, res))
+    app.post('/signin', (req, res) => signin(req, res))
+    app.post('/validate-token', (req, res) => validateToken(req, res))
+
+    export default app

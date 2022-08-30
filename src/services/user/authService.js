@@ -1,19 +1,18 @@
 
-require('dotenv/config')
-const authSecret = process.env.AUTH_SECRET
-const bcrypt = require('bcrypt-nodejs')
-const jwt = require('jwt-simple')
-const fs = require('fs')
+import 'dotenv/config'
+import { compareSync } from 'bcrypt-nodejs'
+import { encode, decode } from 'jwt-simple'
+import { readFileSync } from 'fs'
 
 const path = 'src/services/user/dbUser.json'
-const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
+const users = JSON.parse(readFileSync(path, 'utf-8'))
 
 const authService = (email, password) => {
 
     const user = users.find(user => user.email === email)
     if (!user) return { status: 401, data: 'Email ou senha inválido!!' }
 
-    const isMatch = bcrypt.compareSync(password, user.password)
+    const isMatch = compareSync(password, user.password)
     if (!isMatch) return { status: 401, data: 'Email ou senha inválido!' }
 
     const now = Math.floor(Date.now() / 1000)
@@ -31,7 +30,7 @@ const authService = (email, password) => {
         status: 200,
         data: {
             ...payload,
-            token: jwt.encode(payload, authSecret)
+            token: encode(payload, process.env.AUTH_SECRET)
         }
     }   
 
@@ -40,7 +39,7 @@ const authService = (email, password) => {
 const validateTokenService = (userData) => {
         try {
             if(userData){
-                const token = jwt.decode(userData.token, authSecret)
+                const token = decode(userData.token, process.env.AUTH_SECRET)
                 if(new Date(token.exp * 1000) > new Date()){
                     return true
                 }
@@ -51,4 +50,4 @@ const validateTokenService = (userData) => {
         return false
 }
 
-module.exports = {authService, validateTokenService}
+export default {authService, validateTokenService}

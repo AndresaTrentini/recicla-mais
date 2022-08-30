@@ -1,10 +1,6 @@
-const express = require('express')
-const userRoutes = require("./routes/api/user/userRoutes")
-const app = express()
-app.use(express.json())
+import app from './app'
+import 'dotenv/config'
 
-app.use(userRoutes)
-
-app.listen(3000, () => {
-    console.log("Servidor Rodando na porta 3000")
+app.listen(process.env.API_PORT, () => {
+    console.log(`Servidor rodando na porta ${process.env.API_PORT}`)
 })

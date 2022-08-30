@@ -1,6 +1,6 @@
-const fs = require('fs')
+import { readFileSync, writeFileSync } from 'fs'
 const path = 'src/services/user/dbUser.json'
-const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
+const users = JSON.parse(readFileSync(path, 'utf-8'))
 
 const DeleteUserService = {
     delete: (id) => {
@@ -13,10 +13,10 @@ const DeleteUserService = {
 
         }
          users.splice(userIndice, 1)
-         fs.writeFileSync(path, JSON.stringify(users))
+         writeFileSync(path, JSON.stringify(users))
 
          return { mensagem: "Usuário removido com sucesso"}
     }
 }
 
-module.exports = DeleteUserService
+export default DeleteUserService

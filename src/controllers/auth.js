@@ -1,4 +1,4 @@
-const {authService, validateTokenService} = require('../services/user/authService')
+import { authService, validateTokenService } from '../services/user/authService'
 
 const signin = (request, response) => {
 
@@ -21,4 +21,4 @@ const validateToken = (request, response) => {
     return validate
 }
 
-module.exports = {signin, validateToken} 
+export default {signin, validateToken} 

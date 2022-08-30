@@ -1,6 +1,6 @@
-const fs = require('fs')
+import { readFileSync, writeFileSync } from 'fs'
 const path = 'src/services/user/dbUser.json'
-const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
+const users = JSON.parse(readFileSync(path, 'utf-8'))
 
 
 const UpdateUserService = {
@@ -33,11 +33,11 @@ const UpdateUserService = {
             adm
         }
 
-        fs.writeFileSync(path, JSON.stringify(users))
+        writeFileSync(path, JSON.stringify(users))
         return { status: 200, mensagem: userIndex[index] }
     }
 }
 
 
 
-module.exports = UpdateUserService
+export default UpdateUserService
