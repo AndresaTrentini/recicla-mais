@@ -1,4 +1,4 @@
-import UserAuthService from '../services/user/AuthUserService'
+import UserAuthService from '../../services/user/AuthUserService'
 
 class AuthUserController {
     constructor() {
