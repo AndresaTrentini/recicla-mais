@@ -2,7 +2,7 @@ import express from "express"
 import { create, list, ListById, destroy, update } from "../../../controllers/user"
 import CreateUserController from "../../../controllers/user/CreateUserController"
 import validationUser from "./validation"
-import { signin, validateToken } from '../../../controllers/auth'
+import { signin, validateToken } from '../../../controllers/user/AuthUserController'
 import passport from '../../../config/passport'
 import admin from '../../../middlewares/admin'
 
