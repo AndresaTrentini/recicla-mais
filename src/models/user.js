@@ -21,4 +21,4 @@ function User(
     this.adm = adm
 }
 
-module.exports = User;
+export default User;

@@ -1,11 +1,10 @@
-require('dotenv/config')
+import 'dotenv/config'
 const authSecret = process.env.AUTH_SECRET
 
-const fs = require('fs')
+import fs from 'fs'
 
-const passport = require('passport')
-//const passportJwt = require('passport-jwt')
-const { Strategy, ExtractJwt } = require('passport-jwt')
+import passport from 'passport'
+import { Strategy, ExtractJwt } from 'passport-jwt'
 
 const path = 'src/services/user/dbUser.json'
 const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
@@ -29,4 +28,4 @@ passport.use(strategy)
 
 const authenticate = () => passport.authenticate('jwt', {session: false})
 
-module.exports = authenticate
+export default authenticate

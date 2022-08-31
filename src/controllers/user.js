@@ -1,7 +1,7 @@
-const CreateUserService = require("../services/user/create");
-const DeleteUserService = require('../services/user/DeleteUserService');
-const ListUserService = require('../services/user/list')
-const UpdateUserService = require('../services/user/UpdateUserService')
+import CreateUserService from "../services/user/create";
+import DeleteUserService from '../services/user/DeleteUserService';
+import ListUserService from '../services/user/list';
+import UpdateUserService from '../services/user/UpdateUserService';
 
 const userController = {
   create: (request, response) => {
@@ -28,7 +28,7 @@ const userController = {
     return response.status(user.status).json(user)
   },
 
-  delete: (request, response) => {
+  destroy: (request, response) => {
     const { id } = request.params
 
     const resultado = DeleteUserService.delete(id)
@@ -41,10 +41,10 @@ const userController = {
 
     const { name, password, birthData, cpf, telephone, address, email, adm } = request.body
 
-    const user = UpdateUserService(id, name, password, birthData, cpf, telephone, address, email, adm)
+    const user = UpdateUserService.update(id, name, password, birthData, cpf, telephone, address, email, adm)
 
     response.status(user.status).json(user.mensagem)
   }
 }
 
-module.exports = userController
+export default userController

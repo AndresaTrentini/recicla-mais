@@ -1,7 +1,7 @@
-const fs = require('fs')
+import { readFileSync } from 'fs'
 
 const path =  'src/services/user/dbUser.json'
-const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
+const users = JSON.parse(readFileSync(path, 'utf-8'))
 
 const ListUserService = {
     listUser: () => {
@@ -21,4 +21,4 @@ const ListUserService = {
     }
   }
   
-  module.exports = ListUserService;
+  export default ListUserService;
