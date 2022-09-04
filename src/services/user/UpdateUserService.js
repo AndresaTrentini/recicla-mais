@@ -1,43 +1,35 @@
-import { readFileSync, writeFileSync } from 'fs'
-const path = 'src/services/user/dbUser.json'
-const users = JSON.parse(readFileSync(path, 'utf-8'))
+import UserModel from '../../models/UserModel'
+export default class UpdateUserService {
+    constructor() { }
 
-
-const UpdateUserService = {
-    update: (
-        id,
+    static async update(id,
         name,
         password,
         birthData,
-        cpf,
         telephone,
-        address,
-        email,
-        adm
-    ) => {
-        const UserIndex = users.findIndex(item => item.id === Number(id))
+        email) {
+        let user = await UserModel.findOne({ where: { id: id } })
 
-        if (UserIndex === -1) {
-            return { status: 400, mensagem: "Usuario não encontrado" }
+        if (!user) {
+            return {
+                sucess: false,
+                message: "Usuario não encontrado",
+            };
         }
 
-        users[userIndex] = {
-            id,
-            name,
-            password,
-            birthData,
-            cpf,
-            telephone,
-            address,
-            email,
-            adm
+        const emailConfirm = UserModel.findOne({ where: { email: email } })
+        if (emailConfirm) {
+            return {
+                sucess: false,
+                message: "Email já cadastrado no sistema",
+            };
         }
+        user = await UserModel.update({ where: { id: id } }, { name, password, birthData, telephone, email });
 
-        writeFileSync(path, JSON.stringify(users))
-        return { status: 200, mensagem: userIndex[index] }
+        return {
+            sucess: true,
+            message: user,
+        };
     }
 }
 
-
-
-export default UpdateUserService
