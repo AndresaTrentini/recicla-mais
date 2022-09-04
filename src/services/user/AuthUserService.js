@@ -1,4 +1,4 @@
-import userModel from '../../models/user'
+import userModel from '../../models/UserModel'
 import 'dotenv/config'
 import { compareSync } from 'bcrypt-nodejs'
 import { encode, decode } from 'jwt-simple'
@@ -11,7 +11,8 @@ class AuthUserService {
 
         const user = await userModel.findOne({
             where: {
-                email: email
+                email,
+                password
             }
         })
         if (!user) return { status: 401, data: 'Email ou senha inválido!!' }

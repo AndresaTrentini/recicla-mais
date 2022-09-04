@@ -1,4 +1,4 @@
-import userModel from "../../models/user"
+import userModel from "../../models/UserModel"
 import { genSaltSync, hashSync } from "bcrypt-nodejs"
 
 class CreateUserService {
@@ -23,7 +23,6 @@ class CreateUserService {
 
 			}
 		}
-
 	}
 
 	encryptPassword(password) {
@@ -32,6 +31,5 @@ class CreateUserService {
 
 	}
 }
-
 
 export default CreateUserService

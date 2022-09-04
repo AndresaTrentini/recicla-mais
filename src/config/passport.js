@@ -1,13 +1,10 @@
 import 'dotenv/config'
 const authSecret = process.env.AUTH_SECRET
 
-import fs from 'fs'
-
 import passport from 'passport'
 import { Strategy, ExtractJwt } from 'passport-jwt'
 
-const path = 'src/services/user/dbUser.json'
-const users = JSON.parse(fs.readFileSync(path, 'utf-8'))
+import UserModel from '../models/UserModel'
 
 const params = {
     secretOrKey: authSecret,
@@ -16,7 +13,7 @@ const params = {
 
 const strategy = new Strategy(params, (payload, done) => {
     try {
-        const user = users.find(user => user.id == payload.id)
+        const user = UserModel.findByPk(payload.id)
         done(null, user ? {...payload} : false)        
 
     }catch(e){
