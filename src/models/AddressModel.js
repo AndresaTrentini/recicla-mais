@@ -1,7 +1,8 @@
 import Sequelize, { Model } from "sequelize";
 import databaseConfig from '../config/db'
 const sequelize = new Sequelize(databaseConfig)
-export default class AdressModel extends Model { }
+
+export default class AddressModel extends Model { }
 
 AddressModel.init(
     {
@@ -28,7 +29,7 @@ AddressModel.init(
     },
     {
         sequelize,
-        modelName: 'address',
+        modelName: 'addresses',
         paranoid: true
     }
 );

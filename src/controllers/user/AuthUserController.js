@@ -27,8 +27,8 @@ class AuthUserController {
     }
 }
 
-const authUserController = new AuthUserController()
-const signin = authUserController.signin
-const validateToken = authUserController.validateToken
+// const authUserController = new AuthUserController()
+// const signin = authUserController.signin
+// const validateToken = authUserController.validateToken
 
-export default { signin, validateToken } 
+export default AuthUserController

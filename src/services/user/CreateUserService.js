@@ -1,37 +1,30 @@
-import userModel from "../../models/user"
-import { genSaltSync, hashSync } from "bcrypt-nodejs"
+import userModel from "../../models/UserModel"
+import utils from "../../utils/utils"
 
 class CreateUserService {
 
-	static async create(name, birthData, cpf, telephone, email, password, adm) {
+	async create(name, birthData, cpf, telephone, email, password, adm) {
 
-		password = this.encryptPassword(password)
+		password = utils.encryptPassword(password)
 
 		try {
-			const newUser = await userModel.create({ name, password, birthData, cpf, telephone, email, adm })
+			const newUser = await userModel.create({ name, email, password, birthData, cpf, telephone, adm })
 
 			return {
-				status: 200,
+				status: 201,
+				success: true,
 				message: "Usuário criado",
-				data: newUser
+				newUser
 			}
 
 		} catch (err) {
 			return {
 				status: 500,
-				message: err.message,
-
+				success: false,
+				message: err.message
 			}
 		}
-
-	}
-
-	encryptPassword(password) {
-		const salt = genSaltSync(10)
-		return hashSync(password, salt)
-
 	}
 }
-
 
 export default CreateUserService

@@ -32,14 +32,7 @@ ServiceModel.init(
         status: {
             type: Sequelize.TINYINT,
             defaultValue:0
-        },
-        data_cadastro: {
-            type: Sequelize.DATE,
-            allowNull: false
-        },
-        quantidade: {
-            type: Sequelize.STRING(2)
-        },
+        }
     },
     {
         sequelize,

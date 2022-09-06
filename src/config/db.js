@@ -7,4 +7,15 @@ module.exports = {
     dialect:process.env.DB_TYPE,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
+    dialectOptions: {
+        useUTC: false,
+        dateStrings: true,
+        typeCast: function (field, next) { 
+        if (field.type === 'DATETIME') {
+          return field.string()
+        }
+          return next()
+        },
+    },    
+    timezone: "-03:00"
 }
