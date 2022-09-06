@@ -1,6 +1,7 @@
 import express from "express";
 import db from "./database";
 import userRoutes from "./routes/api/user/userRoutes"
+import schedulingRoutes from "./routes/api/scheduling/schedulingRoutes"
 
 class App {
     constructor(){
@@ -29,6 +30,7 @@ class App {
 
     routes() {
         this.server.use(userRoutes)
+        this.server.use(schedulingRoutes)
     }
 }
 
