@@ -11,8 +11,7 @@ class AuthUserService {
 
         const user = await userModel.findOne({
             where: {
-                email,
-                password
+                email
             }
         })
         if (!user) return { status: 401, data: 'Email ou senha inválido!!' }
