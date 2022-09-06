@@ -29,7 +29,7 @@ AddressModel.init(
     },
     {
         sequelize,
-        modelName: 'address',
+        modelName: 'addresses',
         paranoid: true
     }
 );
