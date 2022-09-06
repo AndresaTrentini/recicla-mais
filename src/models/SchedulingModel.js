@@ -39,7 +39,7 @@ SchedulingModel.belongsTo(AddressModel, {
     foreignKey: "address_id"
 });
 
-AddressModel.hasMany(AddressModel, {
+AddressModel.hasMany(SchedulingModel, {
     foreignKey: "address_id"
 });
 
