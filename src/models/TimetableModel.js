@@ -4,7 +4,7 @@ import ServiceModel from "./ServiceModel";
 
 const sequelize = new Sequelize(databaseConfig)
 
-export default class HorariosModel extends Model { }
+export default class TimetableModel extends Model { }
 
 TimetableModel.init(
     {
@@ -28,17 +28,7 @@ TimetableModel.init(
         status: {
             type: Sequelize.TINYINT,
             defaultValue:0,
-        },
-        id_servico: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            references:{
-                key: "id",
-                model: ServiceModel
-            }
-           
-        },
-        
+        }        
     },
     {
         sequelize,

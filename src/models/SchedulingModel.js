@@ -1,6 +1,5 @@
 import Sequelize, { Model } from "sequelize";
 import databaseConfig from "../config/db";
-import UserModel from "./UserModel";
 import AddressModel from "./AddressModel";
 import ServiceModel from "./ServiceModel";
 
@@ -19,7 +18,7 @@ SchedulingModel.init({
         allowNull: false
     },
     quantity: {
-        type: Sequelize.INTEGER(2).UNSIGNED.ZEROFILL,
+        type: Sequelize.INTEGER(3).UNSIGNED.ZEROFILL,
         allowNull: false
     },
     completed: {
