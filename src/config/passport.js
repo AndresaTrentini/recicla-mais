@@ -11,9 +11,9 @@ const params = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 }
 
-const strategy = new Strategy(params, (payload, done) => {
+const strategy = new Strategy(params, async (payload, done) => {
     try {
-        const user = UserModel.findByPk(payload.id)
+        const user = await UserModel.findByPk(payload.id)
         done(null, user ? {...payload} : false)        
 
     }catch(e){
