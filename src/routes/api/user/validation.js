@@ -6,12 +6,10 @@ async function userValidator(req, res, next) {
     password: yup.string().required("Senha é obrigatório"),
     confirmPassword: yup.string().required("Confirme sua senha").oneOf([yup.ref('password')], "Senhas diferentes!"),
     birthData: yup.date().required("Data de Nascimento é obrigatório"),
-    cpf: yup.number().required("CPF é obrigatório"),
+    cpf: yup.string().required("CPF é obrigatório"),
     telephone: yup.string().strict("Telefone é obrigatório").required(),
-    address: yup.string().strict().required("Endereço é obrigatório"),
     email: yup.string().strict().email().required("Email é obrigatório"),
     adm: yup.boolean().default(false)
-
   });
 
   try {
