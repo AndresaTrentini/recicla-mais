@@ -21,6 +21,7 @@ export default class ListUserService {
         if (!id){
           return {message: "ID não encontrado"}
         }
+        return user 
       } catch (error){
         console.log(error);
         return {message: error.message};
