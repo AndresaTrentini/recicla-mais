@@ -20,6 +20,12 @@ app.route('/users')
     .post(admin, validationUser, (req, res) => CreateUserController.create(req, res))
     .get(admin, (req, res) => listUserController.list(req, res))
 
+app.route('/profile')
+    .all(passport())
+    .get( (req, res) => listUserController.getProfile(req, res))
+    .delete( (req, res) => deleteUserController.delete(req, res))
+    .put( validationUser, (req, res) => updateUserController.update(req, res))
+
 
 app.route("/users/:id")
     .all(passport())
