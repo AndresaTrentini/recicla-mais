@@ -44,7 +44,7 @@ class CreateSchedulingService {
             }
 
             //VERIFICAR SE QUANTIDADE INFORMADA ESTÁ DENTRO DO MÍNIMO E MÁXIMO
-            if (service.min >= quantity || service.max <= quantity) {
+            if (service.min > quantity || service.max < quantity) {
                 return { status: 400, success: false, message: "Quantidade fora do limite" }
             }
 
