@@ -16,7 +16,7 @@ const listUserController = new ListUserController()
 const updateUserController = new UpdateUserController()
 
 app.route('/users')
-    .all(passport())
+    .all(passport)
     .post(admin, validationUser, (req, res) => CreateUserController.create(req, res))
     .get(admin, (req, res) => listUserController.list(req, res))
 
@@ -28,7 +28,7 @@ app.route('/profile')
 
 
 app.route("/users/:id")
-    .all(passport())
+    .all(passport)
     .get(admin, (req, res) => listUserController.listbyid(req, res))
     .delete(admin, (req, res) => deleteUserController.delete(req, res))
     .put(admin, validationUser, (req, res) => updateUserController.update(req, res))

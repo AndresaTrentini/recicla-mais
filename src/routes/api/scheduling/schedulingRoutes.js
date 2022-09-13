@@ -8,15 +8,15 @@ import CreateSchedulingController from "../../../controllers/scheduling/CreateSc
 const app = express()
 
 app.route('/scheduling')
-	.all(passport())
+	.all(passport)
 	.post((req, res) => CreateSchedulingController.create(req, res) )
 
 app.route('/scheduling/filter')
-	.all(passport())
+	.all(passport)
 	.get((req, res) => ListSchedulingController.list(req, res))
 
 app.route('/scheduling/days-available')
-	.all(passport())
+	.all(passport)
 	.get((req, res) => DaysAvailableSchedulingController.list(req, res))
 
 export default app
