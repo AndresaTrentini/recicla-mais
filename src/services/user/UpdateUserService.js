@@ -4,16 +4,15 @@ export default class UpdateUserService {
     constructor() { }
 
     static async update(id,
-        name,
-        password,
-        birthData,
+        name,        
         telephone,
         email) {
         let user = await UserModel.findOne({ where: { id: id } })
 
         if (!user) {
             return {
-                sucess: false,
+                success: false,
+                status: 400,
                 message: "Usuario não encontrado",
             };
         }
@@ -22,17 +21,18 @@ export default class UpdateUserService {
 
         if (emailConfirm && emailConfirm.id !== id) {
             return {
-                sucess: false,  
+                success: false,
+                status: 400,
                 message: "Email já cadastrado no sistema",
             };
         }
 
-        password = utils.encryptPassword(password)
-        user = await UserModel.update({ name, password, birthData, telephone, email }, { where: { id } });
+        user = await UserModel.update({ name, telephone, email }, { where: { id } });
 
         return {
             sucess: true,
-            message: "Cadastro atualizado",
+            status: 200,
+            message: "Cadastro atualizado com sucesso",
             user
         };
     }

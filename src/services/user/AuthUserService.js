@@ -1,8 +1,8 @@
 import userModel from '../../models/UserModel'
 import 'dotenv/config'
 import { compareSync } from 'bcrypt-nodejs'
-import { encode, decode } from 'jwt-simple'
-
+import { encode } from 'jwt-simple'
+import utils from "../../utils/utils"
 
 class AuthUserService {
     constructor() { }
@@ -14,10 +14,10 @@ class AuthUserService {
                 email
             }
         })
-        if (!user) return { status: 401, data: 'Email ou senha inválido!!' }
+        if (!user) return { status: 400, message: 'Email ou senha inválido!!' }
     
-        const isMatch = compareSync(password, user.password)
-        if (!isMatch) return { status: 401, data: 'Email ou senha inválido!' }
+        const isMatch = utils.isMatchPassword(password, user.password)
+        if (!isMatch) return { status: 400, message: 'Email ou senha inválido!' }
     
         const now = Math.floor(Date.now() / 1000)
     
@@ -40,20 +40,6 @@ class AuthUserService {
     
     }
     
-    validateTokenService(userData) {
-            try {
-                if(userData){
-                    const token = decode(userData.token, process.env.AUTH_SECRET)
-                    if(new Date(token.exp * 1000) > new Date()){
-                        return true
-                    }
-                }
-            } catch(e) {
-    
-            }
-            return false
-    }
-
 }
 
 
