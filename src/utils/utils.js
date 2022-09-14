@@ -1,4 +1,4 @@
-import { genSaltSync, hashSync } from "bcrypt-nodejs"
+import { genSaltSync, hashSync, compareSync } from "bcrypt-nodejs"
 import moment from 'moment'
 
 export default {
@@ -7,7 +7,10 @@ export default {
 	encryptPassword(password) {
 		const salt = genSaltSync(10)
 		return hashSync(password, salt)
+	},
 
+	isMatchPassword(bodyPassword, dbPassword) {
+		return compareSync(bodyPassword, dbPassword)
 	},
 
 	sliceMinutes: (start, end, duration) => {
