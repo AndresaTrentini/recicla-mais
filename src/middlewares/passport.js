@@ -15,7 +15,7 @@ const strategy = new Strategy(params, async (payload, done) => {
     try {
         const user = await UserModel.findByPk(payload.id)
         if (!user) {
-            return done(null, false)
+            return done(null, false, {message: "Usuário não encontrado."})
         }
 
         return done(null, { ...payload })
