@@ -5,8 +5,9 @@ class CreateSchedulingController {
 
     static async create(req, res) {
         try {
-            const { user_id, address_id, service_id, scheduled_date, quantity } = req.body
-
+            const { address_id, service_id, scheduled_date, quantity } = req.body
+            const user_id = req.user.id
+            
             const schedule = await CreateSchedulingService.create(user_id, address_id, service_id, scheduled_date, quantity)
 
             res.status(schedule.status).json(schedule)

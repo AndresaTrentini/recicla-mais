@@ -1,28 +1,30 @@
 import UpdateUserService from "../../services/user/UpdateUserService"
+import UpdatePasswordUser from "../../services/user/UpdatePasswordUserService"
 
 export default class updateUserController {
     constructor() { }
     async update(request, response) {
-        if (request.user.adm == 1){
-            const { id } = request.params;}
+        const id = request.user.adm == 1 ? request.params.id : request.user.id
 
-        const {id} = request.user
-        const { name, password, birthData, telephone, email } = request.body
+        const { name, telephone, email } = request.body
         const user = await UpdateUserService.update(
             id,
-            name,
-            password,
-            birthData,
+            name,            
             telephone,
             email)
 
-        if (user.success) {
-            return response.status(200).json(user.message)
+        return response.status(user.status).json(user)
 
-        }
-        else {
-            return response.status(400).json(user.message)
-        }
+    }
+
+    async password(request, response) {
+
+        const { id } = request.user
+        const { oldPassword, newPassword } = request.body
+
+        const user = await UpdatePasswordUser.updatePassword(id, oldPassword, newPassword)
+
+        return response.status(user.status).json(user)
 
     }
 }

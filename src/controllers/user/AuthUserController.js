@@ -18,17 +18,7 @@ class AuthUserController {
         response.status(user.status).json(user.data)
 
     }
-
-    validateToken(request, response) {
-        const user = request.body || null
-        const validate = this.service.validateTokenService(user)
-
-        return validate
-    }
 }
 
-// const authUserController = new AuthUserController()
-// const signin = authUserController.signin
-// const validateToken = authUserController.validateToken
 
 export default AuthUserController
