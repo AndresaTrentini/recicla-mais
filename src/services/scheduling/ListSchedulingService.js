@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 class ListSchedulingService {
     constructor() { }
 
-    static async list(id, adm, period){
+    static async list(id, adm, start, end){
         try{
             if (adm === 1) {
 				const schedulings = await SchedulingModel.findAll(
@@ -14,8 +14,8 @@ class ListSchedulingService {
 						where: {
 							completed: 0,
 							scheduled_date: {
-								[Op.gte]: moment(period.start).startOf('day'),
-								[Op.lte]: moment(period.end).endOf('day')
+								[Op.gte]: moment(start).startOf('day'),
+								[Op.lte]: moment(end).endOf('day')
 							}
 						},
                         attributes: ["id", "scheduled_date", "quantity", "completed", 
@@ -38,8 +38,8 @@ class ListSchedulingService {
 						completed: 0,
 						user_id: id,
 						scheduled_date: {
-							[Op.gte]: moment(period.start).startOf('day'),
-							[Op.lte]: moment(period.end).endOf('day')
+							[Op.gte]: moment(start).startOf('day'),
+							[Op.lte]: moment(end).endOf('day')
 						}
 					},
 					include: {

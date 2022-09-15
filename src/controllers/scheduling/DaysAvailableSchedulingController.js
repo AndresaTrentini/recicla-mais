@@ -4,8 +4,10 @@ class DaysAvailableSchedulingController {
     constructor() { }
 
     static async list(req, res) {
-        try {
-            const { data, service_id } = req.body
+        try {            
+            const { service_id } = req.params
+            const data = !req.query.data ? new Date() : req.query.data          
+            
             const days = await DaysAvailableSchedulingService.list(data, service_id)
 
             res.status(days.status).json(days)
