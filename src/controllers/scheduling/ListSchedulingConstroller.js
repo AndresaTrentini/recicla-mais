@@ -16,8 +16,7 @@ class ListSchedulingController {
             res.status(schedule.status).json(schedule)			
 
 		} catch (err) {
-			// res.status(err.status).json({ success: false, data: err.message })
-			res.json({ success: false, data: err.message })
+			res.status(err.status).json({ success: false, data: err.message })			
 		}
 	}
 }
