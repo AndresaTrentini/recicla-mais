@@ -5,7 +5,8 @@ class UpdateScheduling {
 
     static async update(req, res) {
         try {
-            const { id, scheduled_date } = req.body
+            const { scheduled_date } = req.body
+            const { id } = req.params
             const user_id = req.user.id
 
             const scheduling = await UpdateSchedulingService.update(id, scheduled_date, user_id)
