@@ -3,7 +3,7 @@ import UserModel from "../../models/UserModel";
 import ServiceModel from "../../models/ServiceModel";
 import AddressModel from "../../models/AddressModel";
 import TimetableModel from "../../models/TimetableModel";
-import moment from 'moment'
+import utils from "../../utils/utils";
 
 class CreateSchedulingService {
     constructor() { }
@@ -49,15 +49,9 @@ class CreateSchedulingService {
             }
 
             // verificar se hora informada está dentro range e data disponivel para serviço
-            const start = service.timetables[0].start
-            const end = service.timetables[0].end
-            const hour = moment(scheduled_date).format('HH:mm')
-            const day = moment(scheduled_date).day()
-            
-            const verifyDay = service.timetables[0].days.includes(day)
-
-            if(hour < start || hour > end || !verifyDay){
-                return { status: 401, success: false, message: "Data indisponível" }
+            const verifyDate = utils.verifyDate(service.timetables[0], scheduled_date)
+            if(!verifyDate){
+                return { status: 400, success: false, message: "Data indisponível" }
             }
                        
             //verificar disponibilidade data e horario 
