@@ -1,0 +1,571 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Recipla Mais API",
+        "description": "API para sistema de agendamento para coleta de materias recicláveis.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Development"
+        }
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "paths": {
+        "/signup": {
+            "post": {
+                "summary": "Signup",
+                "description": "## Cadastro\n\nUsuário pode realizar um cadastro nesse endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Login / Cadastro"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": "string",
+                                    "password": "string",
+                                    "confirmPassword": "string",
+                                    "birthData": "string",
+                                    "cpf": "string",
+                                    "telephone": "string",
+                                    "email": "string",
+                                    "adm": "integer"
+                                }
+                            },
+                            "example": {
+                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
+                                "password": "1234",
+                                "confirmPassword": "1234",
+                                "birthData": "1980-05-05",
+                                "cpf": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'numeric', '', '', '', '', 'b64::WzExXQ==::46b', 'pt_BR' %}",
+                                "telephone": "{% faker 'phone', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'number', '', '', '', '', '', 'b64::IyM5IyMjIyMjIyM=::46b', 'pt_BR' %}",
+                                "email": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', 'alpha', '', '', '', '', 'b64::Wzdd::46b', 'pt_BR' %}@email.com",
+                                "adm": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/signin": {
+            "post": {
+                "summary": "Signin",
+                "description": "## Login\n\nEndpoint para realizar login.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Login / Cadastro"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": "string",
+                                    "password": "string"
+                                }
+                            },
+                            "example": {
+                                "email": "{% response 'body', 'req_e084b596f0d5498384ddc38113213da5', 'b64::JC5uZXdVc2VyLmVtYWls::46b', 'never', 60 %}",
+                                "password": "1234"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "put": {
+                "summary": "Atualizar",
+                "description": "Usuário pode atualizar alguns campos do seu cadastro neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Perfil"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": "string",
+                                    "telephone": "string",
+                                    "email": "string"
+                                }
+                            },
+                            "example": {
+                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
+                                "telephone": "11999999999",
+                                "email": "{% response 'body', 'req_b0cfad04c3124132890ca5c91211eed4', 'b64::JC5lbWFpbA==::46b', 'never', 60 %}"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir",
+                "description": "Usuário pode excluir seu cadastro neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Perfil"
+                ],
+                "parameters": []
+            },
+            "get": {
+                "summary": "Perfil",
+                "description": "Usuário pode visualizar seus dados de cadastro neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Perfil"
+                ],
+                "parameters": []
+            }
+        },
+        "/profile/password": {
+            "patch": {
+                "summary": "Atualizar Senha",
+                "description": "Usuário pode atualizar sua senha neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Perfil"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "oldPassword": "string",
+                                    "newPassword": "string"
+                                }
+                            },
+                            "example": {
+                                "oldPassword": "1234",
+                                "newPassword": "1234"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/": {
+            "post": {
+                "summary": "Criar",
+                "description": "### Rota exclusiva para administradores\n\nAdministrador pode criar um novo cadastrado. Pode ser de administrador ou não.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": "string",
+                                    "password": "string",
+                                    "confirmPassword": "string",
+                                    "birthData": "string",
+                                    "cpf": "string",
+                                    "telephone": "string",
+                                    "email": "string",
+                                    "adm": "integer"
+                                }
+                            },
+                            "example": {
+                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
+                                "password": "1234",
+                                "confirmPassword": "1234",
+                                "birthData": "1980-01-01",
+                                "cpf": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'numeric', '', '', '', '', 'b64::WzExXQ==::46b', 'pt_BR' %}",
+                                "telephone": "{% faker 'phone', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'number', '', '', '', '', '', 'b64::IyM5IyMjIyMjIyM=::46b', 'pt_BR' %}",
+                                "email": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', 'alpha', '', '', '', '', 'b64::Wzdd::46b', 'pt_BR' %}@email.com",
+                                "adm": 0
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Listar",
+                "description": "### Rota exclusiva para administradores\n\nAdministrador pode listar todos os usuários do sistema.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Listar Por ID",
+                "description": "### Rota exclusiva para administradores\n\nAdministrador pode listar um usuário informando um ID na rota.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "/users/ce859314-2bb3-11ed-87c9-00e04cd29080": {
+            "put": {
+                "summary": "Atualizar",
+                "description": "### Rota exclusiva para administradores\n\nAdministrador pode atualizar um usuário cadastrado.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": "string",
+                                    "password": "string",
+                                    "confirmPassword": "string",
+                                    "telephone": "string",
+                                    "email": "string"
+                                }
+                            },
+                            "example": {
+                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
+                                "password": "1234",
+                                "confirmPassword": "1234",
+                                "telephone": "11999999999",
+                                "email": "{% response 'body', 'req_da2bd2c01e5248979e5c5b86476d0a32', 'b64::JC5uZXdVc2VyLmVtYWls::46b', 'never', 60 %}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/7c13c433-8698-4b85-979c-fcd6f0fd9012": {
+            "delete": {
+                "summary": "Excluir",
+                "description": "### Rota exclusiva para administradores\n\nAdministrador pode excluir um usuário.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "/scheduling/filter/": {
+            "get": {
+                "summary": "Listar Agendamentos",
+                "description": "Usuário comum pode listar seus agendamentos em um período.\n\nAdministradores pode listar todos os agendamentos em um período.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Agendamentos"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "start",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "end",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "period": "object"
+                                }
+                            },
+                            "example": {
+                                "period": {
+                                    "start": "{% now 'custom', 'YYYY-MM-DD' %}",
+                                    "end": "{% customTimestamp 'add', '', '', '7', '', '', '', '', 'custom', 'YYYY-MM-DD', '' %}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scheduling/": {
+            "post": {
+                "summary": "Criar Agendamento",
+                "description": "Usuário pode criar um agendamento neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Agendamentos"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "address_id": "string",
+                                    "service_id": "string",
+                                    "scheduled_date": "string",
+                                    "quantity": "integer"
+                                }
+                            },
+                            "example": {
+                                "address_id": "61642b49-2bb4-11ed-87c9-00e04cd29080",
+                                "service_id": "9a68c70c-2bb4-11ed-87c9-00e04cd29080",
+                                "scheduled_date": "2022-09-15 15:00:00",
+                                "quantity": 7
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scheduling/days-available/": {
+            "get": {
+                "summary": "Listar Dias Disponíveis",
+                "description": "Usuário pode verificar os dias e horários disponíveis para o serviço informado.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "examples": {
+                            "application/json": ""
+                        }
+                    }
+                },
+                "tags": [
+                    "Agendamentos"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "data",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "service_id",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data": "string",
+                                    "service_id": "string"
+                                }
+                            },
+                            "example": {
+                                "data": "{% now 'custom', 'YYYY-MM-DD' %}",
+                                "service_id": "9a68c70c-2bb4-11ed-87c9-00e04cd29080"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
