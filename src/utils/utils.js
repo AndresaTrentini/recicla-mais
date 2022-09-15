@@ -40,6 +40,29 @@ export default {
 		const merged = `${moment(date).format('YYYY-MM-DD')}T${time}`
 
 		return merged;
+	},
+	verifyDate: (timetable, date) => {
+			const start = timetable.start
+            const end = timetable.end
+            const hour = moment(date).format('HH:mm')
+            const day = moment(date).day()            
+            const verifyDay = timetable.days.includes(day)
+
+			if(hour < start || hour > end || !verifyDay){
+                return false
+            } else {
+				return true
+			}
+	},
+
+	diffTime: (date) => {
+		const time = moment(date).diff(moment(), 'days', true)
+		if(time < 1){
+			console.log('passou aqui')
+			return false
+		} else {
+			return true
+		}
 	}
 
 }
