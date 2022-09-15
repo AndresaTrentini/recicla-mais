@@ -20,18 +20,18 @@ const authUserController = new AuthUserController()
 app.post('/signup', validationUser, (req, res) => CreateUserController.create(req, res))
 app.post('/signin', (req, res) => authUserController.signin(req, res))
 
-app.use(passport)
+app.use('/users', passport, admin)
 
 app.route('/users')
-    .all(admin)
-    .post(validationUser, (req, res) => CreateUserController.create(req, res))
-    .get((req, res) => listUserController.list(req, res))
+.post(validationUser, (req, res) => CreateUserController.create(req, res))
+.get((req, res) => listUserController.list(req, res))
 
 app.route("/users/:id")
-    .all(admin)
-    .get((req, res) => listUserController.listbyid(req, res))
-    .delete((req, res) => deleteUserController.delete(req, res))
-    .put(validationUpdateUser, (req, res) => updateUserController.update(req, res))
+.get((req, res) => listUserController.listbyid(req, res))
+.delete((req, res) => deleteUserController.delete(req, res))
+.put(validationUpdateUser, (req, res) => updateUserController.update(req, res))
+
+app.use('/profile', passport)
 
 app.route('/profile')
     .get( (req, res) => listUserController.getProfile(req, res))
