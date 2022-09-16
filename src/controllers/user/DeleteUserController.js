@@ -6,13 +6,11 @@ export default class DeleteUserController {
     }
 
     async delete(request, response) {
-        if (request.user.adm == 1){
-            const { id } = request.params;}
+        
+        const id = request.user.adm == 1 ? request.params.id: request.user.id
 
-        const {id} = request.user
+        const user = await this.service.delete(id);
 
-        const resultado = await this.service.delete(id);
-
-        response.json(resultado);
+        response.status(user.status).json(user);
     }
 }

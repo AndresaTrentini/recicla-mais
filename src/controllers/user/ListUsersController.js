@@ -11,22 +11,16 @@ export default class ListUserController {
     async listbyid(req, res) {
         const { id } = req.params;
 
-        if (!id) {
-            return res.status(400).json({ error: "ID do usuario não foi passado" });
-        }
         const user = await this.service.listOne(id);
 
-        return res.json(user);
+        return res.status(user.status).json(user);
     }
     async getProfile(req, res) {
         const { id } = req.user;
-
-        if (!id) {
-            return res.status(400).json({ error: "ID do usuario não foi passado" });
-        }
+        
         const user = await this.service.listOne(id);
 
-        return res.json(user);
+        return res.status(user.status).json(user);
     }
 
 }

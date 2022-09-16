@@ -1,4 +1,4 @@
-import { genSaltSync, hashSync } from "bcrypt-nodejs"
+import { genSaltSync, hashSync, compareSync } from "bcrypt-nodejs"
 import moment from 'moment'
 
 export default {
@@ -7,7 +7,10 @@ export default {
 	encryptPassword(password) {
 		const salt = genSaltSync(10)
 		return hashSync(password, salt)
+	},
 
+	isMatchPassword(bodyPassword, dbPassword) {
+		return compareSync(bodyPassword, dbPassword)
 	},
 
 	sliceMinutes: (start, end, duration) => {
@@ -37,6 +40,29 @@ export default {
 		const merged = `${moment(date).format('YYYY-MM-DD')}T${time}`
 
 		return merged;
+	},
+	verifyDate: (timetable, date) => {
+			const start = timetable.start
+            const end = timetable.end
+            const hour = moment(date).format('HH:mm')
+            const day = moment(date).day()            
+            const verifyDay = timetable.days.includes(day)
+
+			if(hour < start || hour > end || !verifyDay){
+                return false
+            } else {
+				return true
+			}
+	},
+
+	diffTime: (date) => {
+		const time = moment(date).diff(moment(), 'days', true)
+		if(time < 1){
+			console.log('passou aqui')
+			return false
+		} else {
+			return true
+		}
 	}
 
 }
