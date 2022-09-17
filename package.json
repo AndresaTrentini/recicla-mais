@@ -30,10 +30,10 @@
     "sucrase": "^3.25.0",
     "swagger-ui-express": "^4.5.0",
     "uuidv4": "^6.2.13",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "nodemon": "^2.0.19"
   },
   "devDependencies": {
-    "nodemon": "^2.0.19",
     "sequelize-cli": "^6.4.1"
   }
 }
