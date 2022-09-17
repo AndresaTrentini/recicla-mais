@@ -5,6 +5,11 @@ import swaggerDoc from "../../../swagger.json"
 
 const app = new express()
 
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
+var options = {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "Recicla Mais API",
+  };
+
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerDoc, options))
 
 export default app

@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Recipla Mais API",
+        "title": "Recicla Mais API",
         "description": "API para sistema de agendamento para coleta de materias recicláveis.",
         "version": "1.0.0"
     },
@@ -9,6 +9,10 @@
         {
             "url": "http://localhost:3000",
             "description": "Development"
+        },
+        {
+            "url": "https://reciclamais.herokuapp.com",
+            "description": "Production"
         }
     ],
     "consumes": [
@@ -23,10 +27,43 @@
                     "application/json"
                 ],
                 "responses": {
-                    "200": {
-                        "examples": {
-                            "application/json": ""
+                    "201": {
+                        "description": "Usuário cadastrado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/signup-response-201"
+                                }
+                            }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/components/schemas/signup-response-400-1"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/signup-response-400-2"
+                                        }
+                                    ]
+                                },
+                                "examples": {
+                                    "Email ou CPF já cadastrado": {
+                                        "$ref": "#/components/schemas/signup-response-400-1"
+                                    },
+                                    "Campo Incompleto": {
+                                        "$ref": "#/components/schemas/signup-response-400-2"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "5xx": {
+                        "description": "Erro inesperado."
                     }
                 },
                 "tags": [
@@ -37,27 +74,16 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": "string",
-                                    "password": "string",
-                                    "confirmPassword": "string",
-                                    "birthData": "string",
-                                    "cpf": "string",
-                                    "telephone": "string",
-                                    "email": "string",
-                                    "adm": "integer"
-                                }
+                                "$ref": "#/components/schemas/signup-request"
                             },
                             "example": {
-                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
+                                "name": "Example",
                                 "password": "1234",
                                 "confirmPassword": "1234",
                                 "birthData": "1980-05-05",
-                                "cpf": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'numeric', '', '', '', '', 'b64::WzExXQ==::46b', 'pt_BR' %}",
-                                "telephone": "{% faker 'phone', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'number', '', '', '', '', '', 'b64::IyM5IyMjIyMjIyM=::46b', 'pt_BR' %}",
-                                "email": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', 'alpha', '', '', '', '', 'b64::Wzdd::46b', 'pt_BR' %}@email.com",
-                                "adm": 0
+                                "cpf": "00000000000",
+                                "telephone": "00900000000",
+                                "email": "example@email.com"
                             }
                         }
                     }
@@ -73,8 +99,23 @@
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/signin-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
@@ -88,13 +129,17 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "email": "string",
-                                    "password": "string"
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "example": {
-                                "email": "{% response 'body', 'req_e084b596f0d5498384ddc38113213da5', 'b64::JC5uZXdVc2VyLmVtYWls::46b', 'never', 60 %}",
-                                "password": "1234"
+                                "email": "example@email.com",
+                                "password": "123456"
                             }
                         }
                     }
@@ -102,16 +147,74 @@
             }
         },
         "/profile": {
+            "get": {
+                "summary": "Perfil",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Usuário pode visualizar seus dados de cadastro neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista perfil do usuário.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/profile-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário não encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Perfil"
+                ],
+                "parameters": []
+            },
             "put": {
                 "summary": "Atualizar",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "Usuário pode atualizar alguns campos do seu cadastro neste endpoint.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Usuário atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário não encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
@@ -125,15 +228,21 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name": "string",
-                                    "telephone": "string",
-                                    "email": "string"
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "example": {
-                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
+                                "name": "Example",
                                 "telephone": "11999999999",
-                                "email": "{% response 'body', 'req_b0cfad04c3124132890ca5c91211eed4', 'b64::JC5lbWFpbA==::46b', 'never', 60 %}"
+                                "email": "example@email.com"
                             }
                         }
                     }
@@ -141,32 +250,34 @@
             },
             "delete": {
                 "summary": "Excluir",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "Usuário pode excluir seu cadastro neste endpoint.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Usuário excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
                         }
-                    }
-                },
-                "tags": [
-                    "Perfil"
-                ],
-                "parameters": []
-            },
-            "get": {
-                "summary": "Perfil",
-                "description": "Usuário pode visualizar seus dados de cadastro neste endpoint.",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "examples": {
-                            "application/json": ""
+                    },
+                    "400": {
+                        "description": "Usuário não encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
@@ -179,14 +290,34 @@
         "/profile/password": {
             "patch": {
                 "summary": "Atualizar Senha",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "Usuário pode atualizar sua senha neste endpoint.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Senha atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário não encontrado ou senha anterior incorreta.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
@@ -200,67 +331,102 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "oldPassword": "string",
-                                    "newPassword": "string"
+                                    "oldPassword": {
+                                        "type": "string"
+                                    },
+                                    "newPassword": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "example": {
-                                "oldPassword": "1234",
-                                "newPassword": "1234"
+                                "oldPassword": "****",
+                                "newPassword": "****"
                             }
                         }
                     }
                 }
             }
         },
-        "/users/": {
+        "/users": {
             "post": {
                 "summary": "Criar",
-                "description": "### Rota exclusiva para administradores\n\nAdministrador pode criar um novo cadastrado. Pode ser de administrador ou não.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "### Rota exclusiva para administradores\n\nAdministrador pode criar um novo cadastro de usuário comum ou administrador.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/signup-response-201"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/signup-response-400-2"
+                                }
+                            }
                         }
                     }
                 },
                 "tags": [
                     "Usuários"
                 ],
-                "parameters": [
-                    {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
-                    }
-                ],
+                "parameters": [],
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name": "string",
-                                    "password": "string",
-                                    "confirmPassword": "string",
-                                    "birthData": "string",
-                                    "cpf": "string",
-                                    "telephone": "string",
-                                    "email": "string",
-                                    "adm": "integer"
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "confirmPassword": {
+                                        "type": "string"
+                                    },
+                                    "birthData": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "cpf": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "adm": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             "example": {
-                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
-                                "password": "1234",
-                                "confirmPassword": "1234",
+                                "name": "Example",
+                                "password": "123456",
+                                "confirmPassword": "123456",
                                 "birthData": "1980-01-01",
-                                "cpf": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'numeric', '', '', '', '', 'b64::WzExXQ==::46b', 'pt_BR' %}",
-                                "telephone": "{% faker 'phone', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'number', '', '', '', '', '', 'b64::IyM5IyMjIyMjIyM=::46b', 'pt_BR' %}",
-                                "email": "{% faker 'random', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', 'alpha', '', '', '', '', 'b64::Wzdd::46b', 'pt_BR' %}@email.com",
+                                "cpf": "00000000000",
+                                "telephone": "99999999999",
+                                "email": "example@email.com",
                                 "adm": 0
                             }
                         }
@@ -269,40 +435,64 @@
             },
             "get": {
                 "summary": "Listar",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "### Rota exclusiva para administradores\n\nAdministrador pode listar todos os usuários do sistema.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Lista todos os usuários cadastrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/user-response-200"
+                                }
+                            }
                         }
                     }
                 },
                 "tags": [
                     "Usuários"
                 ],
-                "parameters": [
-                    {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
-                    }
-                ]
+                "parameters": []
             }
         },
-        "/": {
+        "/users/{id}": {
             "get": {
                 "summary": "Listar Por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "### Rota exclusiva para administradores\n\nAdministrador pode listar um usuário informando um ID na rota.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Lista o usuário pelo ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/profile-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuáro não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
@@ -311,24 +501,43 @@
                 ],
                 "parameters": [
                     {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do usuário que será listado",
+                        "required": true
                     }
                 ]
-            }
-        },
-        "/users/ce859314-2bb3-11ed-87c9-00e04cd29080": {
+            },
             "put": {
                 "summary": "Atualizar",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "### Rota exclusiva para administradores\n\nAdministrador pode atualizar um usuário cadastrado.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Atualiza um usuário pelo ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuáro não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
@@ -337,9 +546,10 @@
                 ],
                 "parameters": [
                     {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
+                        "in": "path",
+                        "name": "id",
+                        "description": "Usuário atualizado com sucesso.",
+                        "required": true
                     }
                 ],
                 "requestBody": {
@@ -348,36 +558,56 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name": "string",
-                                    "password": "string",
-                                    "confirmPassword": "string",
-                                    "telephone": "string",
-                                    "email": "string"
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "example": {
-                                "name": "{% faker 'name', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'firstName', '', '', '', '', '', '', '', 'pt_BR' %}",
-                                "password": "1234",
-                                "confirmPassword": "1234",
+                                "name": "Example",
                                 "telephone": "11999999999",
-                                "email": "{% response 'body', 'req_da2bd2c01e5248979e5c5b86476d0a32', 'b64::JC5uZXdVc2VyLmVtYWls::46b', 'never', 60 %}"
+                                "email": "example@email.com"
                             }
                         }
                     }
                 }
-            }
-        },
-        "/users/7c13c433-8698-4b85-979c-fcd6f0fd9012": {
+            },
             "delete": {
                 "summary": "Excluir",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "### Rota exclusiva para administradores\n\nAdministrador pode excluir um usuário.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Usuário excluído com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuáro não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
@@ -386,109 +616,209 @@
                 ],
                 "parameters": [
                     {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
-                    },
-                    {
-                        "in": "header",
-                        "name": "",
-                        "type": "string"
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do usuário que será excluído",
+                        "required": true
                     }
                 ]
             }
         },
-        "/scheduling/filter/": {
-            "get": {
-                "summary": "Listar Agendamentos",
-                "description": "Usuário comum pode listar seus agendamentos em um período.\n\nAdministradores pode listar todos os agendamentos em um período.",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "examples": {
-                            "application/json": ""
-                        }
-                    }
-                },
-                "tags": [
-                    "Agendamentos"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "start",
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "end",
-                        "type": "string"
-                    },
-                    {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
-                    },
-                    {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
-                    },
-                    {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
-                    },
-                    {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "period": "object"
-                                }
-                            },
-                            "example": {
-                                "period": {
-                                    "start": "{% now 'custom', 'YYYY-MM-DD' %}",
-                                    "end": "{% customTimestamp 'add', '', '', '7', '', '', '', '', 'custom', 'YYYY-MM-DD', '' %}"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/scheduling/": {
+        "/timetables": {
             "post": {
-                "summary": "Criar Agendamento",
-                "description": "Usuário pode criar um agendamento neste endpoint.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Criar Tabela de Horário",
+                "description": "Administrador pode criar uma nova tabela de horários para um serviço.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Tabela criada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/timetable-create-response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Tabela de Horários"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "days": {
+                                        "type": "string"
+                                    },
+                                    "start": {
+                                        "type": "string"
+                                    },
+                                    "end": {
+                                        "type": "string"
+                                    },
+                                    "service_id": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "days": "[0, 5, 6]",
+                                "start": "09:00:00",
+                                "end": "17:30:00",
+                                "service_id": "9b58c70c-2rr4-11ed-87c9-11effcd29080"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Listar Tabelas de Horário",
+                "description": "Administrador pode listar as tabelas de horários.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Lista todas as Tabelas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/timetable-list-response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
                         }
                     }
                 },
                 "tags": [
-                    "Agendamentos"
+                    "Tabela de Horários"
+                ],
+                "parameters": []
+            }
+        },
+        "/timetables/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Listar Tabela de Horário Por ID",
+                "description": "Administrador pode lista uma tabela de horário por ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista a tabela por ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/timetable-list-id-response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Tabela não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Tabela de Horários"
                 ],
                 "parameters": [
                     {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID da tabela que será listado",
+                        "required": true
+                    }
+                ]
+            },
+            "put": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Atualizar Tabela de Horário",
+                "description": "Administrador pode atualizar uma tabela de horários.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Atualiza a tabela por ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Tabela não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Tabela de Horários"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID da tabela que será alterada",
+                        "required": true
                     }
                 ],
                 "requestBody": {
@@ -497,34 +827,126 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "address_id": "string",
-                                    "service_id": "string",
-                                    "scheduled_date": "string",
-                                    "quantity": "integer"
+                                    "days": {
+                                        "type": "string"
+                                    },
+                                    "start": {
+                                        "type": "string"
+                                    },
+                                    "end": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             "example": {
-                                "address_id": "61642b49-2bb4-11ed-87c9-00e04cd29080",
-                                "service_id": "9a68c70c-2bb4-11ed-87c9-00e04cd29080",
-                                "scheduled_date": "2022-09-15 15:00:00",
-                                "quantity": 7
+                                "days": "[0, 5, 6]",
+                                "start": "09:00:00",
+                                "end": "17:30:00",
+                                "status": 0
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Excluir Tabela de Horário",
+                "description": "Administrador pode excluir uma tabela de horários.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exclui a tabela por ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Tabela não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Tabela de Horários"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID da tabela que será excluída.",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "days": {
+                                        "type": "string"
+                                    },
+                                    "start": {
+                                        "type": "string"
+                                    },
+                                    "end": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "days": "[0, 5, 6]",
+                                "start": "09:00:00",
+                                "end": "17:30:00",
+                                "status": 0
                             }
                         }
                     }
                 }
             }
         },
-        "/scheduling/days-available/": {
+        "/scheduling/days-available/{service_id}": {
             "get": {
                 "summary": "Listar Dias Disponíveis",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "description": "Usuário pode verificar os dias e horários disponíveis para o serviço informado.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "examples": {
-                            "application/json": ""
+                        "description": "Por padrão lista os próximos 7 dias disponíveis para o serviço escolhido.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/scheduling-list-days-response"
+                                }
+                            }
                         }
                     }
                 },
@@ -535,17 +957,176 @@
                     {
                         "in": "query",
                         "name": "data",
-                        "type": "string"
+                        "type": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "service_id",
+                        "description": "ID do serviço que será listado",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        "/scheduling": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Criar Agendamento",
+                "description": "Usuário pode criar um agendamento neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Agendamento criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/scheduling-create-response-201"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/scheduling-create-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Agendamentos"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "address_id": {
+                                        "type": "string"
+                                    },
+                                    "service_id": {
+                                        "type": "string"
+                                    },
+                                    "scheduled_date": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "address_id": "61642b49-2bb4-11ed-87c9-a2d55af6a108",
+                                "service_id": "9a68c70c-2bb4-11ed-87c9-a2d55af6a108",
+                                "scheduled_date": "2022-09-20 10:00:00",
+                                "quantity": 7
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scheduling/filter": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Listar Agendamentos",
+                "description": "Usuário comum pode listar seus agendamentos em um período.\n\nAdministradores pode listar todos os agendamentos em um período.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista serviços",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/scheduling-list-response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Agendamentos"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "start",
+                        "type": {
+                            "type": "string"
+                        }
                     },
                     {
                         "in": "query",
-                        "name": "service_id",
-                        "type": "string"
-                    },
+                        "name": "end",
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/scheduling/{id}": {
+            "put": {
+                "summary": "Atualizar Agendamento",
+                "security": [
                     {
-                        "in": "header",
-                        "name": "Authorization",
-                        "type": "string"
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Usuário pode atualizar seu agendamento neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Agendamento atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Agendamentos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do agendamento que será atualizado",
+                        "required": true
                     }
                 ],
                 "requestBody": {
@@ -554,14 +1135,1189 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "data": "string",
-                                    "service_id": "string"
+                                    "scheduled_date": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "example": {
-                                "data": "{% now 'custom', 'YYYY-MM-DD' %}",
-                                "service_id": "9a68c70c-2bb4-11ed-87c9-00e04cd29080"
+                                "scheduled_date": "2022-09-20 10:30:00"
                             }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar Agendamento",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Usuário pode atualizar seu agendamento neste endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Agendamento excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Agendamentos"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do agendamento que será excluído",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        "/service": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Criar Serviço",
+                "description": "Administrador pode criar um serviço neste end point.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Serviço criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/service-create-response-201"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Serviços"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "material": {
+                                        "type": "string"
+                                    },
+                                    "unit": {
+                                        "type": "string"
+                                    },
+                                    "min": {
+                                        "type": "string"
+                                    },
+                                    "max": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "material": "Bateria",
+                                "unit": "KG",
+                                "min": "1",
+                                "max": "10"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Listar Serviços",
+                "description": "Usuário lista todos os serviços disponíveis neste end point (status = 1).\n\nAdministrador lista todos os serviços.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Serviços listados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/service-list-response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Serviços"
+                ],
+                "parameters": []
+            }
+        },
+        "/service/{id}": {
+            "get": {
+                "summary": "Listar Serviço Por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Usuário lista o serviço se estiver disponível (status = 1).\n\nAdministrador lista o serviço independente do status.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Serviço listado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/service-list-id-response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Serviços"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do serviço que será listado",
+                        "required": true
+                    }
+                ]
+            },
+            "put": {
+                "summary": "Atualizar Serviço",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Administrador pode atualizar um serviço neste end point.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Serviço atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Serviços"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do serviço que será atualizado",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "material": {
+                                        "type": "string"
+                                    },
+                                    "min": {
+                                        "type": "string"
+                                    },
+                                    "max": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "material": "Bateria",
+                                "min": "1",
+                                "max": "10"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir Serviço",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Administrador pode excluir um serviço neste end point.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Serviço excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Serviços"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do serviço que será excluído",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        "/address": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Criar Endereço",
+                "description": "Usuário pode criar um endereço neste end point.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Endereço criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/address-create-response-201"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endereços"
+                ],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                        "street": {
+                                        "type": "string"
+                                    },
+                                        "number": {
+                                        "type": "string"
+                                    },
+                                        "district": {
+                                        "type": "string"
+                                    },
+                                        "city": {
+                                        "type": "string"
+                                    },
+                                        "state": {
+                                        "type": "string"
+                                    },
+                                        "country": {
+                                        "type": "string"
+                                    },
+                                        "zip": {
+                                        "type": "string"
+                                    }
+                                    
+                                }
+                            },
+                            "example": {                                
+                                    "street": "Rua Example",
+                                    "number": "123",
+                                    "district": "Example",
+                                    "city": "Example",
+                                    "state": "BA",
+                                    "country": "Brasil",
+                                    "zip": "40000000"                                
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Listar Endereços",
+                "description": "Usuário lista todos os seus endereços.\n\nAdministrador lista todos os endereços.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Endereços listados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/address-list-response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endereços"
+                ],
+                "parameters": []
+            }
+        },
+        "/address/{id}": {
+            "get": {
+                "summary": "Listar endereço Por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Administrador lista o endereço escolhido.\n\nUsuário lista apenas se o endereço escolhido pertencer a ele",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Endereço listado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/address-list-id-response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endereços"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do endereço que será listado",
+                        "required": true
+                    }
+                ]
+            },
+            "put": {
+                "summary": "Atualizar Endereço",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Usuário pode atualizar um endereço neste end point.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Endereço atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endereços"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do endereço que será atualizado",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                        "street": {
+                                        "type": "string"
+                                    },
+                                        "number": {
+                                        "type": "string"
+                                    },
+                                        "district": {
+                                        "type": "string"
+                                    },
+                                        "city": {
+                                        "type": "string"
+                                    },
+                                        "state": {
+                                        "type": "string"
+                                    },
+                                        "country": {
+                                        "type": "string"
+                                    },
+                                        "zip": {
+                                        "type": "string"
+                                    }                                  
+                                }
+                            },
+                            "example": {
+                                "street": "Rua Example",
+                                    "number": "123",
+                                    "district": "Example",
+                                    "city": "Example",
+                                    "state": "BA",
+                                    "country": "Brasil",
+                                    "zip": "40000000" 
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir Endereço",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "description": "Usuário pode excluir um endereço neste end point.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Endereço excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-update-delete-response-200"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/default-response-400"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endereços"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID do serviço que será excluído",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "default-response-400": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 400
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "default-update-delete-response-200": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "signup-request": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "confirmPassword": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "birthData": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "cpf": {
+                        "type": "string"
+                    },
+                    "telephone": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    }
+                }
+            },
+            "signup-response-201": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 201
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "newUser": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "birthData": {
+                                "type": "string"
+                            },
+                            "cpf": {
+                                "type": "string"
+                            },
+                            "telephone": {
+                                "type": "string"
+                            },
+                            "adm": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "updatedAt": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "signup-response-400-1": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 400
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "signup-response-400-2": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "signin-response-200": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "iat": {
+                        "type": "integer"
+                    },
+                    "exp": {
+                        "type": "integer"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "profile-response-200": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "birthData": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "cpf": {
+                                "type": "string"
+                            },
+                            "telephone": {
+                                "type": "string"
+                            },
+                            "adm": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "deletedAt": {
+                                "type": "string",
+                                "default": null
+                            }
+                        }
+                    }
+                }
+            },
+            "user-response-200": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "users": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "timetable-create-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 201
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "timetable": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "days": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            "start": {
+                                "type": "string",
+                                "pattern": "([01]?[0-9]|2[0-3]):[0-5][0-9]:[0][0]"
+                            },
+                            "end": {
+                                "type": "string",
+                                "pattern": "([01]?[0-9]|2[0-3]):[0-5][0-9]:[0][0]"
+                            },
+                            "status": {
+                                "type": "integer",
+                                "default": 1
+                            },
+                            "service_id": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "createdAt": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "timetable-list-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "timetables": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "timetable-list-id-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "timetable": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "days": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            "start": {
+                                "type": "string",
+                                "pattern": "([01]?[0-9]|2[0-3]):[0-5][0-9]:[0][0]"
+                            },
+                            "end": {
+                                "type": "string",
+                                "pattern": "([01]?[0-9]|2[0-3]):[0-5][0-9]:[0][0]"
+                            },
+                            "status": {
+                                "type": "integer",
+                                "default": 1
+                            },
+                            "service_id": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "createdAt": {
+                                "type": "string"
+                            },
+                            "deletedAt": {
+                                "type": "string",
+                                "defaul": null
+                            }
+                        }
+                    }
+                }
+            },
+            "scheduling-create-response-201": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 201
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "schedulings": {                        
+                            "type": "object"                        
+                    }                    ,
+                    "user": {
+                        
+                            "type": "object"
+                        
+                    },
+                    "address": {
+                        
+                            "type": "object"
+                        
+                    },
+                    "service": {
+                        
+                            "type": "object"
+                        
+                    }
+                }
+            },
+            "scheduling-create-response-400": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 400
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "scheduling-list-days-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "daysAvailable": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "scheduling-list-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "schedulings": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "service-create-response-201": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 201
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "newService": {                        
+                            "type": "object"                        
+                    }
+                }
+            },
+            "service-list-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "services": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "service-list-id-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "service": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "address-create-response-201": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 201
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "newAddress": {                        
+                            "type": "object"                        
+                    }
+                }
+            },
+            "address-list-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "address": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "address-list-id-response": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "address": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
                         }
                     }
                 }
