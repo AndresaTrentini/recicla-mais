@@ -15,7 +15,7 @@ class AuthUserController {
 
         const user = await this.service.authService(email, password)
 
-        response.status(user.status).json(user.data)
+        response.status(user.status).json(user)
 
     }
 }
