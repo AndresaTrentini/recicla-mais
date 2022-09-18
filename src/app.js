@@ -3,6 +3,7 @@ import db from "./database";
 import userRoutes from "./routes/api/user/userRoutes"
 import schedulingRoutes from "./routes/api/scheduling/schedulingRoutes"
 import swaggerDocumentation from "./routes/api/swaggerDocumentation"
+import serviceRoutes from "./routes/api/service_/ServiceRoutes"
 
 class App {
     constructor(){
@@ -33,6 +34,7 @@ class App {
         this.server.use(swaggerDocumentation)
         this.server.use(userRoutes)
         this.server.use(schedulingRoutes)
+        this.server.use(serviceRoutes)
     }
 }
 

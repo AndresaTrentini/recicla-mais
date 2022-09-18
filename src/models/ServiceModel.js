@@ -31,7 +31,7 @@ ServiceModel.init(
         },
         status: {
             type: Sequelize.TINYINT,
-            defaultValue:0
+            defaultValue:1
         }
     },
     {
