@@ -20,8 +20,9 @@ class CreateSchedulingService {
             }
 
             //recuperar endereço
-            const address = await AddressModel.findByPk(address_id, {
-                where: { user_id },
+            //alterado para findOne, pois findByPk não aceita where como options
+            const address = await AddressModel.findOne({
+                where: { id: address_id, user_id },
                 attributes: ["street", "district", "city", "state", "country", "zip", "number"]
             })
 
