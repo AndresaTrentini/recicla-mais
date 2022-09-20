@@ -4,6 +4,7 @@ import userRoutes from "./routes/api/user/userRoutes"
 import schedulingRoutes from "./routes/api/scheduling/schedulingRoutes"
 import swaggerDocumentation from "./routes/api/swaggerDocumentation"
 import serviceRoutes from "./routes/api/service_/ServiceRoutes"
+import timetableRoutes from "./routes/api/timetable/timetableRoutes"
 
 class App {
     constructor(){
@@ -35,6 +36,7 @@ class App {
         this.server.use(userRoutes)
         this.server.use(schedulingRoutes)
         this.server.use(serviceRoutes)
+        this.server.use(timetableRoutes)
     }
 }
 

@@ -3,6 +3,8 @@ import moment from 'moment'
 
 export default {
 	DURATION: 30,
+	TIME_REGEX: /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]:[0-5][0-9]$/,
+	DAYS_ARRAY_REGEX: /^\[((\d{1})(,\d{1})*)?\]$/,
 
 	encryptPassword(password) {
 		const salt = genSaltSync(10)
@@ -63,6 +65,9 @@ export default {
 		} else {
 			return true
 		}
-	}
+	},
+	 isSameOrBefore: (startTime, endTime) => {
+		return moment(startTime, 'HH:mm').isSameOrBefore(moment(endTime, 'HH:mm'));
+	  }
 
 }
