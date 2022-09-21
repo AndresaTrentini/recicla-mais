@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Recicla Mais API",
-        "description": "API para sistema de agendamento para coleta de materias recicláveis.",
+        "description": "API para sistema de agendamento para coleta de materiais recicláveis.",
         "version": "1.0.0"
     },
     "servers": [
@@ -1759,6 +1759,31 @@
                     }
                 ]
             }
+        },
+        "/stats": {
+            "get": {
+                "summary": "Estatísticas",
+                "description": "## Administrador lista os dados de usuários e agendamentos",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna os dados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/stats-response-200"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Estatísticas"
+                ],
+                "parameters": []                
+            }
         }
     },
     "components": {
@@ -2318,6 +2343,30 @@
                         "type": "array",
                         "items": {
                             "type": "object"
+                        }
+                    }
+                }
+            },
+            "stats-response-200": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "default": 200
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "stats": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {"type": "string"},
+                            "totalUsers": {"type": "number"},
+		                    "activeUsers": {"type": "number"},
+		                    "totalSchedule": {"type": "number"},
+		                    "completeSchedule": {"type": "number"},
+		                    "canceledSchedule": {"type": "number"},
+		                    "createdAt": {"type": "string", "format": "date"}
                         }
                     }
                 }
