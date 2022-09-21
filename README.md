@@ -9,7 +9,7 @@ Para executar o projeto será necessário instalar os seguintes programas:
 * [Visual Studio Code](https://code.visualstudio.com/) (recomendado)
 * [Node.js](https://nodejs.org/en/)
 * [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)
-
+* [MongoDB](https://www.mongodb.com/try/download/community)
 ### Desenvolvimento
 
 Para iniciar é necessário clonar o projeto do GitHub num diretório de sua preferência através do terminal:
@@ -58,7 +58,12 @@ Para Deploy foi utilizado o [Heroku](https://www.heroku.com/).
 * [Talita Lima](https://www.linkedin.com/in/talitalimadc)
 * [Robson Rosa](https://www.linkedin.com/in/robsonrosajr/)
 
+## Próximos Recursos
 
+- [x] Rotas de dados estatísticos com MongoDB
+- [ ] Integração com API de pagamento
+- [ ] Integração com API de envio de emails
+#
 ###### Este Projeto Integrador teve como objetivo colocar em prática os conhecimentos obtidos durante o curso de Backend Node ministrado pela Digital House em parceria com o Ifood através do programa Potência Tech.
 
 
