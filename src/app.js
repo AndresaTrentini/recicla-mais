@@ -5,6 +5,8 @@ import schedulingRoutes from "./routes/api/scheduling/schedulingRoutes"
 import swaggerDocumentation from "./routes/api/swaggerDocumentation"
 import serviceRoutes from "./routes/api/service_/ServiceRoutes"
 import timetableRoutes from "./routes/api/timetable/timetableRoutes"
+import addressRoutes from "./routes/api/address/addressRoutes"
+import cors from 'cors'
 
 class App {
     constructor(){
@@ -15,6 +17,7 @@ class App {
     }
 
     middlewares() {
+        this.server.use(cors())
         this.server.use(express.json())
         this.server.use(express.urlencoded({
             extended: true
@@ -37,6 +40,7 @@ class App {
         this.server.use(schedulingRoutes)
         this.server.use(serviceRoutes)
         this.server.use(timetableRoutes)
+        this.server.use(addressRoutes)
     }
 }
 
