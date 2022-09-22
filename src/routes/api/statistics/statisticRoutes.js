@@ -1,4 +1,4 @@
-import GetStatisticController from "../../../controllers/Statistic/getStatisticsController";
+import GetStatisticController from "../../../controllers/statistic/getStatisticsController";
 import express from "express"
 import passport from "../../../middlewares/passport"
 import admin from "../../../middlewares/admin"
