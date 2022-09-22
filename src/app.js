@@ -10,8 +10,6 @@ import statsRoutes from "./routes/api/statistics/statisticRoutes"
 import statsRoutine from "./routines/statsRoutine";
 import addressRoutes from "./routes/api/address/addressRoutes"
 import cors from 'cors'
-import statsRoutes from "./routes/api/statistics/statisticRoutes"
-import statsRoutine from "./routines/statsRoutine";
 
 class App {
     constructor(){
