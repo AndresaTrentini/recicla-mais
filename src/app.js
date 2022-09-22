@@ -45,14 +45,9 @@ class App {
         this.server.use(schedulingRoutes)
         this.server.use(serviceRoutes)
         this.server.use(timetableRoutes)
-        this.server.use(statsRoutes)
-    }
-
-    routines(){
-        statsRoutine()
         this.server.use(addressRoutes)
         this.server.use(statsRoutes)
-    }
+    }    
 
     routines(){
         statsRoutine()
