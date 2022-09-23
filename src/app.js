@@ -1,6 +1,5 @@
 import express from "express";
 import db from "./database";
-import "./config/mongodb"
 import userRoutes from "./routes/api/user/userRoutes"
 import schedulingRoutes from "./routes/api/scheduling/schedulingRoutes"
 import swaggerDocumentation from "./routes/api/swaggerDocumentation"
@@ -12,12 +11,12 @@ import addressRoutes from "./routes/api/address/addressRoutes"
 import cors from 'cors'
 
 class App {
-    constructor(){
+    constructor() {
         this.server = express();
         this.middlewares();
         this.AuthDatabase();
-        this.routes(); 
-        this.routines();       
+        this.routes();
+        this.routines();
     }
 
     middlewares() {
@@ -28,10 +27,10 @@ class App {
         }))
     }
 
-    async AuthDatabase(){
-        try{
+    async AuthDatabase() {
+        try {
             await db.authenticate()
-            console.log("Database Conectado")           
+            console.log("Database Conectado")
         } catch (error) {
             console.log("Não foi possível conectar ao banco de dados:", error.message)
         }
@@ -45,9 +44,9 @@ class App {
         this.server.use(timetableRoutes)
         this.server.use(addressRoutes)
         this.server.use(statsRoutes)
-    }    
+    }
 
-    routines(){
+    routines() {
         statsRoutine()
     }
 }
