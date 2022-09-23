@@ -5,7 +5,7 @@ import admin from "../../../middlewares/admin"
 
 const app = new express()
 
-app.use(passport, admin)
+app.use('/stats', passport, admin)
 
 app.route('/stats')
 .get((req, res) => GetStatisticController.get(req, res))
