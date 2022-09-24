@@ -5,7 +5,7 @@ import SchedulingModel from "../models/SchedulingModel"
 import { Op } from "sequelize"
 
 export default () => {
-    nodeSchedule.scheduleJob( process.env.STATS_RULE, async function () {
+    nodeSchedule.scheduleJob(process.env.STATS_RULE, async function () {
         try {
             const totalUsers = await UserModel.count({ paranoid: false })
             const activeUsers = await UserModel.count()
