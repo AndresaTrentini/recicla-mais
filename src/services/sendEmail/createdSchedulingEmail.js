@@ -16,7 +16,7 @@ async function createdSchedulingEmail(name, email, service, datetime) {
             subject: "Novo Agendamento - Recicla Mais",
             html: `<h2>
                 <p> Olá, <strong>${name}</strong>! </p>
-                 <p>   Confirmando agendamento para coleta de ${service} no dia ${date} as ${time}.</p>
+                 <p>   Confirmando agendamento para coleta de ${service} no dia ${date} às ${time}.</p>
                  </h2>
                  <br>
                  <p>Atenciosamente, Equipe Recicla Mais.</p>
