@@ -48,7 +48,7 @@ export default {
 	verifyDate: (timetable, date) => {
 			const start = timetable.start
             const end = timetable.end
-            const hour = moment(date).format('HH:mm')
+            const hour = moment(date).format('HH:mm:ss')
             const day = moment(date).day()            
             const verifyDay = timetable.days.includes(day)
 
