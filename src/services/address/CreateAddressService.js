@@ -8,7 +8,7 @@ class CreateAddressService {
             
         const address = await AddressModel.create({street, district, city, state, country, zip, number, user_id})
        
-        return {status: 201, success: true, message: "Tabela cadastrada com sucesso.", address}
+        return {status: 201, success: true, message: "Endereço cadastrado com sucesso.", address}
         
         
         }catch (err){
